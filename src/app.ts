@@ -1,33 +1,47 @@
-import prompts from "prompts";
-import chalk from "chalk";
+// import { printWelcomeMessage, printNoAccess } from "./messages";
+// import { askForAction, askForCredentials } from "./questions";
+// import { handleGetPassword, handleSetPassword, hasAccess } from "./commands";
+// import { serialize } from "v8";
 
-// console.log(chalk.blue("Hello World!"));
+import { MongoClient } from "mongodb";
+import dotenv from "dotenv";
+dotenv.config();
 
 const run = async () => {
-  console.log("Welcome to passwordisland");
+  const url = process.env.MONGODB_URL;
+  try {
+    const client = await MongoClient.connect(url, { useUnifiedTopology: true });
+    console.log("Connect to DB!");
 
-  const prompts = require("prompts");
+    const db = client.db("passwordisland-ronja");
 
-  const questions = [
-    {
-      type: "password",
-      name: "username",
-      message: "enter your username",
-      validate: (username) =>
-        username === "islander" ? true : "you may not enter!",
-    },
-    {
-      type: "password",
-      name: "value",
-      message: "Welcome on the island! Where do you want to go?",
-      validate: (value) =>
-        value === "for a swim" ? true : "you must leave the island!",
-    },
-  ];
+    await db.collection("inventory").insertOne({
+      item: "canvas",
+      qty: 100,
+      tags: ["cotton"],
+      size: { h: 28, w: 35.5, uom: "cm" },
+    });
 
-  async () => {
-    const response = await prompts(questions);
-  };
+    client.close();
+  } catch (error) {
+    console.error(error);
+  }
+  //   printWelcomeMessage();
+  //   const credentials = await askForCredentials();
+  //   if (!hasAccess(credentials.masterPassword)) {
+  //     printNoAccess();
+  //     run();
+  //     return;
+  //   }
+  //   const action = await askForAction();
+  //   switch (action.command) {
+  //     case "set":
+  //       handleSetPassword(action.passwordName);
+  //       break;
+  //     case "get":
+  //       handleGetPassword(action.passwordName);
+  //       break;
+  //   }
 };
 
 run();
