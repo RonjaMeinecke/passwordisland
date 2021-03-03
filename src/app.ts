@@ -5,14 +5,30 @@
 
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
-import { closeDB, connectDB, getCollection } from "./db";
+import {
+  closeDB,
+  connectDB,
+  createPasswordDoc,
+  deletePasswordDoc,
+  getCollection,
+  readPasswordDoc,
+  updatePasswordDoc,
+} from "./db";
 dotenv.config();
 
 const run = async () => {
   const url = process.env.MONGODB_URL;
   try {
     await connectDB(url, "passwordisland-ronja");
-    await getCollection("password");
+    await createPasswordDoc({
+      name: "Ronja",
+      value: "1234",
+    });
+    // await getCollection("password");
+    await readPasswordDoc("Ronja");
+    await updatePasswordDoc("Ronja", { name: "RonjaM", value: "4321" });
+    // await getCollection("passwords");
+    await deletePasswordDoc("Ronja");
     await closeDB();
 
     // await db.collection("inventory").insertOne({
