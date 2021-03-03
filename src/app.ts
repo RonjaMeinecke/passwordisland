@@ -5,24 +5,22 @@
 
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
+import { closeDB, connectDB, getCollection } from "./db";
 dotenv.config();
 
 const run = async () => {
   const url = process.env.MONGODB_URL;
   try {
-    const client = await MongoClient.connect(url, { useUnifiedTopology: true });
-    console.log("Connect to DB!");
+    await connectDB(url, "passwordisland-ronja");
+    await getCollection("password");
+    await closeDB();
 
-    const db = client.db("passwordisland-ronja");
-
-    await db.collection("inventory").insertOne({
-      item: "canvas",
-      qty: 100,
-      tags: ["cotton"],
-      size: { h: 28, w: 35.5, uom: "cm" },
-    });
-
-    client.close();
+    // await db.collection("inventory").insertOne({
+    //   item: "canvas",
+    //   qty: 100,
+    //   tags: ["cotton"],
+    //   size: { h: 28, w: 35.5, uom: "cm" },
+    // });
   } catch (error) {
     console.error(error);
   }
