@@ -40,7 +40,12 @@ export async function updatePasswordDoc(
     { $set: passwordDoc }
   );
 }
-export async function deletePasswordDoc(passwordName: string) {
+export async function deletePasswordDoc(
+  passwordName: string
+): Promise<Boolean> {
   const passwordCollection = await getCollection<PasswordDoc>("passwords");
-  return await passwordCollection.deleteOne({ name: passwordName });
+  const deleteResult = await passwordCollection.deleteOne({
+    name: passwordName,
+  });
+  return deleteResult.deletedCount >= 1;
 }

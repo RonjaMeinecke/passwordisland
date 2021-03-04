@@ -20,15 +20,15 @@ const run = async () => {
   const url = process.env.MONGODB_URL;
   try {
     await connectDB(url, "passwordisland-ronja");
-    await createPasswordDoc({
-      name: "Ronja",
-      value: "1234",
-    });
+    // await createPasswordDoc({
+    //   name: "Ronja",
+    //   value: "1234",
+    // });
     // await getCollection("password");
-    await readPasswordDoc("Ronja");
-    await updatePasswordDoc("Ronja", { name: "RonjaM", value: "4321" });
+    //console.log(await readPasswordDoc("Ronja"));
+    //await updatePasswordDoc("Ronja", { name: "RonjaM", value: "4321" });
     // await getCollection("passwords");
-    await deletePasswordDoc("Ronja");
+    await deletePasswordDoc("RonjaM");
     await closeDB();
 
     // await db.collection("inventory").insertOne({
