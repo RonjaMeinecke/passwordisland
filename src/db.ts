@@ -13,13 +13,14 @@ export async function connectDB(url: string, dbName: string) {
   db = client.db(dbName);
 }
 
+export function closeDB() {
+  client.close();
+}
+
 export function getCollection<T>(collectionName: string): Collection<T> {
   return db.collection<T>(collectionName);
 }
 
-export function closeDB() {
-  client.close();
-}
 export async function createPasswordDoc(passwordDoc: PasswordDoc) {
   const passwordCollection = await getCollection<PasswordDoc>("passwords");
   await passwordCollection.insertOne(passwordDoc);
@@ -32,14 +33,23 @@ export async function readPasswordDoc(passwordName: string) {
 
 export async function updatePasswordDoc(
   passwordName: string,
-  passwordDoc: PasswordDoc
-) {
+  fieldsToUpdate: Partial<PasswordDoc>
+): Promise<Boolean> {
   const passwordCollection = await getCollection<PasswordDoc>("passwords");
-  return await passwordCollection.updateOne(
+  const updateResult = await passwordCollection.updateOne(
     { name: passwordName },
-    { $set: passwordDoc }
+    { $set: fieldsToUpdate }
   );
+  return updateResult.modifiedCount >= 1;
 }
+
+export async function updatePasswordValue(
+  passwordName: string,
+  newPasswordValue: string
+): Promise<Boolean> {
+  return await updatePasswordDoc(passwordName, { value: newPasswordValue });
+}
+
 export async function deletePasswordDoc(
   passwordName: string
 ): Promise<Boolean> {
