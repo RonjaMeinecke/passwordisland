@@ -13,6 +13,7 @@ import {
   getCollection,
   readPasswordDoc,
   updatePasswordDoc,
+  updatePasswordValue,
 } from "./db";
 dotenv.config();
 
@@ -28,7 +29,8 @@ const run = async () => {
     //console.log(await readPasswordDoc("Ronja"));
     //await updatePasswordDoc("Ronja", { name: "RonjaM", value: "4321" });
     // await getCollection("passwords");
-    await deletePasswordDoc("RonjaM");
+    await updatePasswordValue("RonjaM", "5678");
+    //await deletePasswordDoc("RonjaM");
     await closeDB();
 
     // await db.collection("inventory").insertOne({
