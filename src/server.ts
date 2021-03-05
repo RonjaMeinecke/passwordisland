@@ -7,6 +7,8 @@ dotenv.config();
 const port = process.env.PORT;
 console.log("Port is: ", port);
 
+const url = process.env.MONGODB_URL;
+
 connectDB(url, "passwordisland-ronja");
 
 const server = http.createServer(async (request, response) => {
