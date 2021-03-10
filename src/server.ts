@@ -4,6 +4,18 @@ import { connectDB, readPasswordDoc } from "./db";
 
 dotenv.config();
 
+const parseJSONBody = <T>(request: http.IncomingMessage): Promise<T> => {
+  return new Promise((resolve) => {
+    let data = "";
+    request.on("data", (chunk) => {
+      data += chunk;
+    });
+    request.on("end", () => {
+      resolve(JSON.parse(data));
+    });
+  });
+};
+
 const port = process.env.PORT;
 console.log("Port is: ", port);
 
@@ -34,8 +46,14 @@ const server = http.createServer(async (request, response) => {
     response.statusCode = 200;
     response.setHeader("Content-Type", "application/json");
     response.end(JSON.stringify(passwordDoc));
+
     return;
-  }
+  } else if (request.method === "POST")
+    if (request.method === "POST") {
+      const newPassword = await parseJSONBody(request);
+      console.log({ newPassword });
+      response.end();
+    }
 
   response.end();
 });
