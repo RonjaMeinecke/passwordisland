@@ -7,6 +7,7 @@ GET http://localhost:3333/api/passwords/wififi
 ### POST a new password
 POST http://localhost:3333/api/passwords
 Content-Type: application/json
+
 {
     "name": "wifi",
     "value": "test-password-123"
